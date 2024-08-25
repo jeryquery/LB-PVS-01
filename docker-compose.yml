@@ -14,3 +14,32 @@ services:
     ports:
       - 5672:5672
       - 15672:15672
+  mongodb1:
+    image: mongo:7.0
+    container_name: mongodb1
+    ports:
+      - "27017:27017"
+    command: --replSet rs0 --bind_ip_all --port 27017
+    volumes:
+      - mongo1_data:/data/db
+  mongodb2:
+    image: mongo:7.0
+    container_name: mongodb2
+    ports:
+      - "27018:27017"
+    command: --replSet rs0 --bind_ip_all --port 27018
+    volumes:
+      - mongo2_data:/data/db
+  mongodb3:
+    image: mongo:7.0
+    container_name: mongodb3
+    ports:
+      - "27019:27017"
+    command: --replSet rs0 --bind_ip_all --port 27019
+    volumes:
+      - mongo3_data:/data/db
+
+volumes:
+  mongo1_data:
+  mongo2_data:
+  mongo3_data:
