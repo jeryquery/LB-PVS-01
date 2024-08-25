@@ -1,0 +1,5 @@
+services:
+  stock-publisher:
+    build: ./stock-publisher
+    container_name: stock-publisher
+    restart: always
