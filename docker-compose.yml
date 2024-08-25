@@ -8,6 +8,18 @@ services:
     environment:
       - RABBITMQ_URL=amqp://guest:guest@rabbitmq/
       - TICKER_INTERVAL=1
+  stock-liveview:
+    build: ./stock-liveview
+    container_name: stock-liveview
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - MONGODB_URL=mongodb1://127.0.0.1:27017,127.0.0.1:27018,127.0.0.1:27019/?replicaSet=rs0
+      - MONGODB_DB=stockmarket
+      - MONGODB_COLLECTION=stocks
+      - NODE_ENV=development
+      - PORT=3000
   rabbitmq:
     image: rabbitmq:management
     container_name: rabbitmq
