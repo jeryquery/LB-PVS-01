@@ -26,7 +26,7 @@ services:
     ports:
       - 5672:5672
       - 15672:15672
-  mongo1:
+  mongodb1:
     image: mongo:7.0
     container_name: mongodb1
     restart: always
@@ -36,8 +36,8 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
-      - "mongo1_data:/data/db"
-      - "mongo1_config:/data/configdb"
+      - "mongodb1_data:/data/db"
+      - "mongodb1_config:/data/configdb"
     healthcheck:
       test: echo "try { rs.status() } catch (err) { rs.initiate({_id:'rs0',members:[{_id:0,host:'host.docker.internal:27017',priority:1},{_id:1,host:'host.docker.internal:27018',priority:0.5},{_id:2,host:'host.docker.internal:27019',priority:0.5}]}) }" | mongosh --port 27017 --quiet
       interval: 5s
@@ -46,7 +46,7 @@ services:
       start_interval: 1s
       retries: 30
 
-  mongo2:
+  mongodb2:
     image: mongo:7.0
     container_name: mongodb2
     restart: always
@@ -56,10 +56,10 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
-      - "mongo2_data:/data/db"
-      - "mongo2_config:/data/configdb"
+      - "mongodb2_data:/data/db"
+      - "mongodb2_config:/data/configdb"
 
-  mongo3:
+  mongodb3:
     image: mongo:7.0
     container_name: mongodb3
     restart: always
@@ -69,14 +69,14 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
-      - "mongo3_data:/data/db"
-      - "mongo3_config:/data/configdb"
+      - "mongodb3_data:/data/db"
+      - "mongodb3_config:/data/configdb"
 
 volumes:
-  mongo1_data:
-  mongo1_config:
-  mongo2_data:
-  mongo2_config:
-  mongo3_data:
-  mongo3_config:
+  mongodb1_data:
+  mongodb1_config:
+  mongodb2_data:
+  mongodb2_config:
+  mongodb3_data:
+  mongodb3_config:
 
