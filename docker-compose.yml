@@ -28,7 +28,7 @@ services:
       - 15672:15672
   mongo1:
     image: mongo:7.0
-    container_name: mongo1
+    container_name: mongodb1
     restart: always
     ports:
       - 27017:27017
@@ -48,7 +48,7 @@ services:
 
   mongo2:
     image: mongo:7.0
-    container_name: mongo2
+    container_name: mongodb2
     restart: always
     ports:
       - 27018:27017
@@ -61,7 +61,7 @@ services:
 
   mongo3:
     image: mongo:7.0
-    container_name: mongo3
+    container_name: mongodb3
     restart: always
     ports:
       - 27019:27017
