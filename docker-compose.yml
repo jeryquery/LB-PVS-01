@@ -8,18 +8,42 @@ services:
     environment:
       - RABBITMQ_URL=amqp://guest:guest@rabbitmq/
       - TICKER_INTERVAL=1
-  stock-liveview:
+
+  stock-liveview1:
     build: ./stock-liveview
-    container_name: stock-liveview
+    container_name: stock-liveview1
     restart: always
     ports:
-      - "3000:3000"
+      - "3001:3000"
     environment:
       - MONGODB_URL=mongodb://host.docker.internal:27017,host.docker.internal:27018,host.docker.internal:27019/?replicaSet=rs0
       - MONGODB_DB=stockmarket
       - MONGODB_COLLECTION=stocks
       - NODE_ENV=development
       - PORT=3000
+
+  stock-liveview2:
+    build: ./stock-liveview
+    container_name: stock-liveview2
+    restart: always
+    ports:
+      - "3002:3000"
+    environment:
+      - MONGODB_URL=mongodb://host.docker.internal:27017,host.docker.internal:27018,host.docker.internal:27019/?replicaSet=rs0
+      - MONGODB_DB=stockmarket
+      - MONGODB_COLLECTION=stocks
+      - NODE_ENV=development
+      - PORT=3000
+
+  nginx:
+    build: ./nginx
+    container_name: nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - stock-liveview1
+      - stock-liveview2
+
   rabbitmq:
     image: rabbitmq:management
     container_name: rabbitmq
