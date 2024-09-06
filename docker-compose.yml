@@ -15,7 +15,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - MONGODB_URL=mongodb1://127.0.0.1:27017,127.0.0.1:27018,127.0.0.1:27019/?replicaSet=rs0
+      - MONGODB_URL=mongodb://host.docker.internal:27017,host.docker.internal:27018,host.docker.internal:27019/?replicaSet=rs0
       - MONGODB_DB=stockmarket
       - MONGODB_COLLECTION=stocks
       - NODE_ENV=development
@@ -23,6 +23,8 @@ services:
   rabbitmq:
     image: rabbitmq:management
     container_name: rabbitmq
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - 5672:5672
       - 15672:15672
@@ -32,7 +34,7 @@ services:
     restart: always
     ports:
       - 27017:27017
-    command: ["mongod", "--replSet", "rs0", "--bind_ip_all", "--port", "27017"]
+    command: [ "mongod", "--replSet", "rs0", "--bind_ip_all", "--port", "27017" ]
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
@@ -52,7 +54,7 @@ services:
     restart: always
     ports:
       - 27018:27017
-    command: ["mongod", "--replSet", "rs0", "--bind_ip_all", "--port", "27017"]
+    command: [ "mongod", "--replSet", "rs0", "--bind_ip_all", "--port", "27017" ]
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
@@ -65,12 +67,54 @@ services:
     restart: always
     ports:
       - 27019:27017
-    command: ["mongod", "--replSet", "rs0", "--bind_ip_all", "--port", "27017"]
+    command: [ "mongod", "--replSet", "rs0", "--bind_ip_all", "--port", "27017" ]
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
       - "mongo3_data:/data/db"
       - "mongo3_config:/data/configdb"
+
+  aapl-consumer:
+    build: ./aapl-consumer
+    container_name: aapl-consumer
+    restart: always
+    depends_on:
+      - rabbitmq
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+      - MONGODB_URI=mongodb://host.docker.internal:27017,host.docker.internal:27018,host.docker.internal:27019/?replicaSet=rs0
+      - MONGODB_DB=stockmarket
+      - MONGODB_COLLECTION=stocks
+
+  msft-consumer:
+    build: ./msft-consumer
+    container_name: msft-consumer
+    restart: always
+    depends_on:
+      - rabbitmq
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+      - MONGODB_URI=mongodb://host.docker.internal:27017,host.docker.internal:27018,host.docker.internal:27019/?replicaSet=rs0
+      - MONGODB_DB=stockmarket
+      - MONGODB_COLLECTION=stocks
+
+  tsla-consumer:
+    build: ./tsla-consumer
+    container_name: tsla-consumer
+    restart: always
+    depends_on:
+      - rabbitmq
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+      - MONGODB_URI=mongodb://host.docker.internal:27017,host.docker.internal:27018,host.docker.internal:27019/?replicaSet=rs0
+      - MONGODB_DB=stockmarket
+      - MONGODB_COLLECTION=stocks
 
 volumes:
   mongo1_data:
@@ -79,4 +123,5 @@ volumes:
   mongo2_config:
   mongo3_data:
   mongo3_config:
+
 
