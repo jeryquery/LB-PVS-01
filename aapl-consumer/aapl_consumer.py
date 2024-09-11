@@ -2,9 +2,15 @@ import os
 import pika
 import json
 from pymongo import MongoClient
+from dotenv import load_dotenv
+
+# Lade Umgebungsvariablen aus der .env-Datei
+load_dotenv()
 
 # Umgebungsvariablen laden RabbitMQ
 rabbitmq_host = os.getenv("RABBITMQ_HOST", "rabbitmq")
+rabbitmq_user = os.getenv("RABBITMQ_DEFAULT_USER", "default_user")  
+rabbitmq_pass = os.getenv("RABBITMQ_DEFAULT_PASS", "default_pass")
 rabbitmq_queue = "AAPL"
 
 # Umgebungsvariablen laden MongoDB
@@ -16,7 +22,7 @@ mongodb_collection = os.getenv("MONGODB_COLLECTION")
 connection_params = pika.ConnectionParameters(
     host=rabbitmq_host,
     port=5672,
-    credentials=pika.PlainCredentials('guest', 'guest')
+    credentials=pika.PlainCredentials(rabbitmq_user, rabbitmq_pass)
 )
 connection = pika.BlockingConnection(connection_params)
 channel = connection.channel()

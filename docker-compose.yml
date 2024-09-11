@@ -6,7 +6,7 @@ services:
     depends_on:
       - rabbitmq
     environment:
-      - RABBITMQ_URL=amqp://guest:guest@rabbitmq/
+      - RABBITMQ_URL=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@rabbitmq/
       - TICKER_INTERVAL=1
 
   stock-liveview1:
@@ -52,6 +52,12 @@ services:
     ports:
       - 5672:5672
       - 15672:15672
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq   
+
   mongodb1:
     image: mongo:7.0
     container_name: mongodb1
@@ -106,11 +112,8 @@ services:
       - rabbitmq
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    environment:
-      - RABBITMQ_HOST=rabbitmq
-      - MONGODB_URI=mongodb://host.docker.internal:27017,host.docker.internal:27018,host.docker.internal:27019/?replicaSet=rs0
-      - MONGODB_DB=stockmarket
-      - MONGODB_COLLECTION=stocks
+    env_file:
+      - .env  # Hier wird die .env-Datei geladen
 
   msft-consumer:
     build: ./msft-consumer
@@ -120,11 +123,8 @@ services:
       - rabbitmq
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    environment:
-      - RABBITMQ_HOST=rabbitmq
-      - MONGODB_URI=mongodb://host.docker.internal:27017,host.docker.internal:27018,host.docker.internal:27019/?replicaSet=rs0
-      - MONGODB_DB=stockmarket
-      - MONGODB_COLLECTION=stocks
+    env_file:
+      - .env  # Hier wird die .env-Datei geladen
 
   tsla-consumer:
     build: ./tsla-consumer
@@ -134,11 +134,8 @@ services:
       - rabbitmq
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    environment:
-      - RABBITMQ_HOST=rabbitmq
-      - MONGODB_URI=mongodb://host.docker.internal:27017,host.docker.internal:27018,host.docker.internal:27019/?replicaSet=rs0
-      - MONGODB_DB=stockmarket
-      - MONGODB_COLLECTION=stocks
+    env_file:
+      - .env  # Hier wird die .env-Datei geladen
 
 volumes:
   mongodb1_data:
@@ -147,5 +144,7 @@ volumes:
   mongodb2_config:
   mongodb3_data:
   mongodb3_config:
+  rabbitmq_data:
+
 
 
