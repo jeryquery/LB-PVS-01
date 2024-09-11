@@ -45,7 +45,7 @@ def process_batch():
     if message_count > 0:
         avg_price = price_sum / message_count
         print(f"Saving average price for {rabbitmq_queue}: {avg_price}")
-        collection.insert_one({"company": {rabbitmq_queue}, "avgPrice": avg_price})
+        collection.insert_one({"company": rabbitmq_queue, "avgPrice": avg_price})
 
     # Nach Verarbeitung zurücksetzen
     price_sum = 0
