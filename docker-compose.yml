@@ -99,7 +99,7 @@ services:
       - "mongodb3_config:/data/configdb"
 
   aapl-consumer:
-    build: ./aapl-consumer
+    build: ./stock-consumer
     container_name: aapl-consumer
     restart: always
     depends_on:
@@ -108,12 +108,13 @@ services:
       - "host.docker.internal:host-gateway"
     environment:
       - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_QUEUE=AAPL
       - MONGODB_URI=mongodb://host.docker.internal:27017,host.docker.internal:27018,host.docker.internal:27019/?replicaSet=rs0
       - MONGODB_DB=stockmarket
       - MONGODB_COLLECTION=stocks
 
   msft-consumer:
-    build: ./msft-consumer
+    build: ./stock-consumer
     container_name: msft-consumer
     restart: always
     depends_on:
@@ -122,12 +123,13 @@ services:
       - "host.docker.internal:host-gateway"
     environment:
       - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_QUEUE=MSFT
       - MONGODB_URI=mongodb://host.docker.internal:27017,host.docker.internal:27018,host.docker.internal:27019/?replicaSet=rs0
       - MONGODB_DB=stockmarket
       - MONGODB_COLLECTION=stocks
 
   tsla-consumer:
-    build: ./tsla-consumer
+    build: ./stock-consumer
     container_name: tsla-consumer
     restart: always
     depends_on:
@@ -136,6 +138,7 @@ services:
       - "host.docker.internal:host-gateway"
     environment:
       - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_QUEUE=TSLA
       - MONGODB_URI=mongodb://host.docker.internal:27017,host.docker.internal:27018,host.docker.internal:27019/?replicaSet=rs0
       - MONGODB_DB=stockmarket
       - MONGODB_COLLECTION=stocks
