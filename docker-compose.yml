@@ -105,7 +105,7 @@ services:
       - "mongodb3_config:/data/configdb"
 
   aapl-consumer:
-    build: ./aapl-consumer
+    build: ./stock-consumer
     container_name: aapl-consumer
     restart: always
     depends_on:
@@ -114,9 +114,11 @@ services:
       - "host.docker.internal:host-gateway"
     env_file:
       - .env  # Hier wird die .env-Datei geladen
+    environment:
+      - RABBITMQ_QUEUE=AAPL
 
   msft-consumer:
-    build: ./msft-consumer
+    build: ./stock-consumer
     container_name: msft-consumer
     restart: always
     depends_on:
@@ -125,9 +127,11 @@ services:
       - "host.docker.internal:host-gateway"
     env_file:
       - .env  # Hier wird die .env-Datei geladen
+    environment:
+      - RABBITMQ_QUEUE=MSFT
 
   tsla-consumer:
-    build: ./tsla-consumer
+    build: ./stock-consumer
     container_name: tsla-consumer
     restart: always
     depends_on:
@@ -136,6 +140,9 @@ services:
       - "host.docker.internal:host-gateway"
     env_file:
       - .env  # Hier wird die .env-Datei geladen
+    environment:
+      - RABBITMQ_QUEUE=TSLA
+
 
 volumes:
   mongodb1_data:

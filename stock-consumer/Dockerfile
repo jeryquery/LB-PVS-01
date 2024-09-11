@@ -6,6 +6,6 @@ COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY msft_consumer.py .
+COPY stock_consumer.py .
 
 CMD ["python", "stock_consumer.py"]
