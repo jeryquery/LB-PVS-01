@@ -60,18 +60,25 @@ def callback(ch, method, properties, body):
     event_type = message.get("eventType")
     price = message.get("price", 0)
 
-    # Nur Buy berücksichtigen
-    if event_type == "buy":
-        price_sum += price
-        message_count += 1
+    try:
+        # Nur Buy berücksichtigen
+        if event_type == "buy":
+            price_sum += price
+            message_count += 1
 
-    # Nachrichten verarbeiten wenn 1000 erreicht sind.
-    if message_count >= batch_size:
-        process_batch()
+        # Nachrichten verarbeiten wenn 1000 erreicht sind.
+        if message_count >= batch_size:
+            process_batch()
+
+        # nachricht manuell bestätigen nach der verarbeitung
+        ch.basic_ack(delivery_tag=method.delivery_tag)
+    except Exception as e:
+        print(f"Error processing message: {e}")
+        ch.basic_nack(delivery_tag=method.delivery_tag, requeue=True)
 
 # Nachrichten verarbeiten
 channel.queue_declare(queue=rabbitmq_queue)
-channel.basic_consume(queue=rabbitmq_queue, on_message_callback=callback, auto_ack=True)
+channel.basic_consume(queue=rabbitmq_queue, on_message_callback=callback, auto_ack=False)
 
 print(f'Waiting for {rabbitmq_queue} messages. To exit press CTRL+C')
 try:
