@@ -105,7 +105,7 @@ services:
       - "mongodb3_config:/data/configdb"
 
   aapl-consumer:
-    build: ./stock-consumer
+    image: shinjukudt/stock-consumer:latest  # Verwendet das gepushte Image
     container_name: aapl-consumer
     restart: always
     depends_on:
@@ -118,7 +118,7 @@ services:
       - RABBITMQ_QUEUE=AAPL
 
   msft-consumer:
-    build: ./stock-consumer
+    image: shinjukudt/stock-consumer:latest  # Verwendet das gepushte Image
     container_name: msft-consumer
     restart: always
     depends_on:
@@ -131,7 +131,7 @@ services:
       - RABBITMQ_QUEUE=MSFT
 
   tsla-consumer:
-    build: ./stock-consumer
+    image: shinjukudt/stock-consumer:latest  # Verwendet das gepushte Image
     container_name: tsla-consumer
     restart: always
     depends_on:
@@ -152,6 +152,3 @@ volumes:
   mongodb3_data:
   mongodb3_config:
   rabbitmq_data:
-
-
-
