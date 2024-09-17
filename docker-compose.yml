@@ -1,6 +1,6 @@
 services:
   stock-publisher:
-    build: ./stock-publisher
+    image: shinjukudt/stock-publisher:latest  # Verwendet das gepushte Image
     container_name: stock-publisher
     restart: always
     depends_on:
