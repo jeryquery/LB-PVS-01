@@ -10,7 +10,7 @@ services:
       - TICKER_INTERVAL=1
 
   stock-liveview1:
-    build: ./stock-liveview
+    image: shinjukudt/stock-liveview:latest  # Verwendet das gepushte Image
     container_name: stock-liveview1
     restart: always
     ports:
@@ -23,7 +23,7 @@ services:
       - PORT=3000
 
   stock-liveview2:
-    build: ./stock-liveview
+    image: shinjukudt/stock-liveview:latest  # Verwendet das gepushte Image
     container_name: stock-liveview2
     restart: always
     ports:
